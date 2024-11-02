@@ -467,3 +467,9 @@ input[type="number"] {
 .MuiButtonBase-root.MuiRadio-root.Mui-checked {
 	color: var(--bl-secondary);
 }
+
+@media (max-width: 1200px) {
+	.MuiGrid-item {
+		padding-left: 0px !important;
+	}
+}
