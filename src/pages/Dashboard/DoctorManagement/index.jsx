@@ -6,8 +6,10 @@ import iconDetail from "src/assets/icons/icon-detail.svg";
 import IconEdit from "src/assets/icons/icon-edit.svg";
 import IconSearch from "src/assets/icons/icon-input-search.svg";
 import IconAdd from "src/assets/icons/icon-plus-circle-success.svg";
+import { Button } from "src/components/Button";
 import { Empty } from "src/components/Empty";
 import { Input } from "src/components/Input";
+import { Modal } from "src/components/Modal";
 import { Spin } from "src/components/Spin";
 import { Table } from "src/components/Table";
 import { handleError } from "src/utils/api-error-handling";
@@ -28,6 +30,8 @@ const DoctorManagement = () => {
 	const [dateTimeModalOpen, setDateTimeModalOpen] = useState(false);
 	const [selectedDoctorDateTime, setSelectedDoctorDateTime] = useState(null);
 	const [reload, setReload] = useState(false);
+	const [deleteDoctorModalOpen, setDeleteDoctorModalOpen] = useState(false);
+	const [selectedDoctorForDelete, setSelectedDoctorForDelete] = useState(null);
 
 	const debouncedSearch = useMemo(
 		() =>
@@ -71,6 +75,8 @@ const DoctorManagement = () => {
 			})
 			.then((res) => {
 				getData();
+				setDeleteDoctorModalOpen(false);
+				setSelectedDoctorForDelete(null);
 			})
 			.catch((err) => {
 				handleError({ err });
@@ -148,7 +154,13 @@ const DoctorManagement = () => {
 						</IconButton>
 					</Tooltip>
 					<Tooltip title="حذف">
-						<IconButton className={style.IconButton} onClick={() => deleteAdmin(row?.id)}>
+						<IconButton
+							className={style.IconButton}
+							onClick={() => {
+								setSelectedDoctorForDelete(row);
+								setDeleteDoctorModalOpen(true);
+							}}
+						>
 							<img src={IconDelete} alt="delete-icon" />
 						</IconButton>
 					</Tooltip>
@@ -215,6 +227,26 @@ const DoctorManagement = () => {
 				doctor={selectedDoctorDateTime}
 				setDoctor={setSelectedDoctorDateTime}
 			/>
+			<Modal
+				fullWidth
+				state={deleteDoctorModalOpen}
+				setState={setDeleteDoctorModalOpen}
+				title="حذف دکتر"
+				footerEnd={
+					<div className={style.buttons}>
+						<Button size="xlarge" variant="ghost" onClick={() => setDeleteDoctorModalOpen(false)}>
+							انصراف
+						</Button>
+						<Button size="xlarge" onClick={() => deleteAdmin(selectedDoctorForDelete?.id)}>
+							تایید
+						</Button>
+					</div>
+				}
+			>
+				<div className={style.exit}>
+					آیا مطمئن هستید که میخواهید دکتر "{selectedDoctorForDelete?.name}" را حذف کنید؟
+				</div>
+			</Modal>
 		</>
 	);
 };

@@ -48,6 +48,24 @@
 	}
 }
 
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 1rem;
+
+	button {
+		width: auto;
+
+		&:last-child {
+			min-width: 11.5625rem;
+		}
+	}
+}
+
+.exit {
+	padding: 1rem 0;
+}
+
 @media (min-width: 900px) {
 	.wrapper {
 		display: none;
