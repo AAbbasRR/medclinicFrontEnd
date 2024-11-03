@@ -52,7 +52,7 @@ function AdapterJalali(props, ref) {
 									label="Time"
 									value={field.value}
 									inputRef={field.ref}
-									format="hh:mm"
+									format="HH:mm"
 									onChange={(date) => {
 										field.onChange(date);
 									}}
