@@ -166,11 +166,11 @@ function a11yProps(index) {
 
 const tabData = [
 	{ label: "شنبه", value: 0 },
-	{ label: "یکشنبه", value: 1 },
+	{ label: "یک‌شنبه", value: 1 },
 	{ label: "دوشنبه", value: 2 },
-	{ label: "سشنبه", value: 3 },
+	{ label: "سه‌شنبه", value: 3 },
 	{ label: "چهارشنبه", value: 4 },
-	{ label: "پنجشنبه", value: 5 },
+	{ label: "پنج‌شنبه", value: 5 },
 	{ label: "جمعه", value: 6 },
 ];
 
