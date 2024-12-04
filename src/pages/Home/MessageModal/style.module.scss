@@ -1,0 +1,36 @@
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 1rem;
+
+	button {
+		width: auto;
+
+		&:last-child {
+			min-width: 11.5625rem;
+		}
+	}
+}
+
+.messageBox {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+}
+
+.success,
+.fail {
+	font-size: 1.25rem;
+	font-weight: bold;
+	margin-bottom: 2rem;
+}
+
+.fail {
+	color: red;
+}
+
+.success {
+	color: green;
+}

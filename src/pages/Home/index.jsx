@@ -13,9 +13,9 @@ import { Input } from "src/components/Input";
 import { Select } from "src/components/Select";
 import { handleError } from "src/utils/api-error-handling";
 import axios from "src/utils/axios";
-import notify from "src/utils/toast";
 import { translate } from "src/utils/translate";
 import { object, string } from "yup";
+import MessageModal from "./MessageModal";
 import style from "./style.module.scss";
 
 moment.loadPersian({ usePersianDigits: true, dialect: "persian-modern" });
@@ -62,6 +62,11 @@ const HomePage = () => {
 		terms_content: "خالی",
 	});
 	const [counter, setCounter] = useState({ key: false, date: Date.now() });
+	const [messageModalOpen, setMessageModalOpen] = useState(false);
+	const [messageModalData, setMessageModalData] = useState({
+		message: "",
+		success: false,
+	});
 
 	const getCurrentWeek = () => {
 		const currentMonth = moment(today).format("jMMMM");
@@ -146,7 +151,11 @@ const HomePage = () => {
 		axios
 			.post("/public/reservations/send-otp/", data)
 			.then((res) => {
-				notify("کد تایید به شماره شما ارسال شد", "success");
+				setMessageModalOpen(true);
+				setMessageModalData({
+					message: "کد تایید به شماره شما ارسال شد",
+					success: true,
+				});
 				setOtpSended(true);
 				setCounter((e) => ({ key: !e.key, date: Date.now() + COUNTDOWN_TIME }));
 			})
@@ -166,7 +175,11 @@ const HomePage = () => {
 		axios
 			.post("/public/reservations/create/", data)
 			.then((res) => {
-				notify("رزرو شما با موفقیت انجام شد", "success");
+				setMessageModalOpen(true);
+				setMessageModalData({
+					message: "رزرو شما با موفقیت انجام شد",
+					success: true,
+				});
 				reset();
 				setOtpSended(false);
 				setCounter((e) => ({ key: !e.key, date: Date.now() }));
@@ -440,6 +453,7 @@ const HomePage = () => {
 					</div>
 				</Grid>
 			</Paper>
+			<MessageModal open={messageModalOpen} setOpen={setMessageModalOpen} data={messageModalData} />
 		</div>
 	);
 };

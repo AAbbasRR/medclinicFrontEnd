@@ -140,6 +140,7 @@ const DoctorManagement = () => {
 			headerName: "",
 			field: "action",
 			sortable: false,
+			minWidth: 150,
 			flex: 1,
 			renderCell: ({ row }) => (
 				<div className={style.row}>
