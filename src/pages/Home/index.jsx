@@ -34,23 +34,33 @@ const rtlTheme = createTheme({
 		MuiPickersDay: {
 			styleOverrides: {
 				root: {
-					fontSize: "0.9rem",
-					padding: "10px",
-					fontFamily: "IRANSansXFaNum, sans-serif",
+					width: "50px",
+					height: "45px",
+					padding: "5px",
+					fontSize: "1.2rem",
 				},
 			},
 		},
 		MuiTypography: {
 			styleOverrides: {
-				root: {
-					fontSize: "1.1rem",
+				h4: {
+					fontSize: "1.5rem",
+				},
+				caption: {
+					fontSize: "1rem",
 				},
 			},
 		},
-		MuiCalendarPicker: {
+		MuiDateCalendar: {
 			styleOverrides: {
 				root: {
-					fontSize: "1.2rem",
+					minWidth: "100%",
+					width: "100%",
+					height: "450px",
+					minHeight: "450px",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
 				},
 			},
 		},
