@@ -35,8 +35,8 @@ const ReservsManagement = () => {
 	const [value, setValue] = useState("");
 	const [filterModal, setFilterModal] = useState(false);
 	const [filterData, setFilterData] = useState({
-		created_at_after: "",
-		created_at_before: "",
+		date_after: "",
+		date_before: "",
 	});
 	const [createReserveModal, setCreateReserveModal] = useState(false);
 	const [reload, setReload] = useState(false);
@@ -64,8 +64,8 @@ const ReservsManagement = () => {
 					search: searchValue,
 					page: page,
 					page_size: pageSize,
-					created_at_after: filterData?.created_at_after,
-					created_at_before: filterData?.created_at_before,
+					date_after: filterData?.date_after,
+					date_before: filterData?.date_before,
 				},
 			})
 			.then((res) => {
@@ -84,8 +84,8 @@ const ReservsManagement = () => {
 			.get("/admin/reservations/list/export/", {
 				params: {
 					search: searchValue,
-					created_at_after: filterData?.created_at_after,
-					created_at_before: filterData?.created_at_before,
+					date_after: filterData?.date_after,
+					date_before: filterData?.date_before,
 				},
 				responseType: "blob",
 			})
@@ -104,15 +104,15 @@ const ReservsManagement = () => {
 	};
 	const getSubmitFilter = (data) => {
 		try {
-			let after_date = new Date(data?.created_at_after);
+			let after_date = new Date(data?.date_after);
 			after_date.setDate(after_date.getDate() + 1);
-			data.created_at_after = after_date.toISOString()?.slice(0, 10);
+			data.date_after = after_date.toISOString()?.slice(0, 10);
 		} catch {}
 
 		try {
-			let before_date = new Date(data?.created_at_before);
+			let before_date = new Date(data?.date_before);
 			before_date.setDate(before_date.getDate() + 1);
-			data.created_at_before = before_date.toISOString()?.slice(0, 10);
+			data.date_before = before_date.toISOString()?.slice(0, 10);
 		} catch {}
 
 		setFilterData({ ...data });
@@ -121,8 +121,8 @@ const ReservsManagement = () => {
 	const resetFilter = () => {
 		reset();
 		setFilterData({
-			created_at_after: "",
-			created_at_before: "",
+			date_after: "",
+			date_before: "",
 		});
 		setFilterModal(false);
 	};
