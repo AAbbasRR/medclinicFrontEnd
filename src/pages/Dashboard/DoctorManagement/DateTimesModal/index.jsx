@@ -74,7 +74,6 @@ const DateTimesModal = ({ open, setOpen, doctor, setDoctor }) => {
 		axios
 			.post("/admin/doctor/datetime/list-create/", data)
 			.then((res) => {
-				reset();
 				setReload(!reload);
 			})
 			.catch((err) => {
