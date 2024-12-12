@@ -1,6 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
-import { addDays } from "date-fns";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalaliV3";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import moment from "moment-jalaali";
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
@@ -21,11 +24,42 @@ import style from "./style.module.scss";
 moment.loadPersian({ usePersianDigits: true, dialect: "persian-modern" });
 const COUNTDOWN_TIME = 120000;
 
+const rtlTheme = createTheme({
+	direction: "rtl",
+	typography: {
+		fontFamily: "IRANSansXFaNum, sans-serif",
+		fontSize: 14,
+	},
+	components: {
+		MuiPickersDay: {
+			styleOverrides: {
+				root: {
+					fontSize: "0.9rem",
+					padding: "10px",
+					fontFamily: "IRANSansXFaNum, sans-serif",
+				},
+			},
+		},
+		MuiTypography: {
+			styleOverrides: {
+				root: {
+					fontSize: "1.1rem",
+				},
+			},
+		},
+		MuiCalendarPicker: {
+			styleOverrides: {
+				root: {
+					fontSize: "1.2rem",
+				},
+			},
+		},
+	},
+});
+
 const schema = (otpSended) =>
 	object({
-		first_name: string().required(translate.errors.required),
-		last_name: string().required(translate.errors.required),
-		national_code: string().required(translate.errors.required),
+		full_name: string().required(translate.errors.required),
 		mobile_number: string().required(translate.errors.required),
 		otp: otpSended ? string().required(translate.errors.required) : string(),
 	});
@@ -46,12 +80,11 @@ const HomePage = () => {
 		defaultValues: { wage: 0 },
 	});
 	const today = new Date();
+	today.setHours(0, 0, 0, 0);
 
 	const [loading, setLoading] = useState(false);
 	const [doctorsData, setDoctorsData] = useState([]);
 	const [selectedDoctor, setSelectedDoctor] = useState(null);
-	const [calendarData, setCalendarData] = useState(null);
-	const [selectedDay, setSelectedDay] = useState(null);
 	const [selectedDate, setSelectedDate] = useState(null);
 	const [dayTimesData, setDayTimesData] = useState([]);
 	const [selectedTime, setSelectedTime] = useState(null);
@@ -67,31 +100,6 @@ const HomePage = () => {
 		message: "",
 		success: false,
 	});
-
-	const getCurrentWeek = () => {
-		const currentMonth = moment(today).format("jMMMM");
-		const currentYear = moment(today).format("jYYYY");
-
-		const daysOfWeek = Array.from({ length: 7 }).map((_, index) => {
-			const day = addDays(today, index);
-			return {
-				dayOfWeek: moment(day).format("dddd"),
-				dayOfMonth: moment(day).format("jDD"),
-			};
-		});
-
-		const result = {
-			month: currentMonth,
-			year: currentYear,
-			week: daysOfWeek,
-		};
-
-		return result;
-	};
-
-	useEffect(() => {
-		setCalendarData(getCurrentWeek());
-	}, []);
 
 	const getSettings = () => {
 		setLoading(true);
@@ -136,8 +144,11 @@ const HomePage = () => {
 	};
 	const getDoctorDays = () => {
 		setLoading(true);
+		const doctor_date = new Date(selectedDate).toLocaleDateString("en-GB");
+		const [day, month, year] = doctor_date.split("/");
+		const isoDate = `${year}-${month}-${day}`;
 		axios
-			.get(`/public/doctor/datetime/list/?doctor=${selectedDoctor}&day_of_week=${selectedDay}`)
+			.get(`/public/doctor/datetime/list/?doctor=${selectedDoctor}&date=${isoDate}`)
 			.then((res) => {
 				setDayTimesData(res?.data);
 			})
@@ -166,11 +177,11 @@ const HomePage = () => {
 	};
 	const onSubmit = (data) => {
 		setLoading(true);
+		const doctor_date = new Date(selectedDate).toLocaleDateString("en-GB");
+		const [day, month, year] = doctor_date.split("/");
+		const isoDate = `${year}-${month}-${day}`;
 		data.doctor = selectedDoctor;
-		data.year = moment(today).format("jYYYY");
-		data.month = moment(today).format("jMMMM");
-		data.date = selectedDate;
-		data.day_of_week = selectedDay;
+		data.date = isoDate;
 		data.time = selectedTime;
 		axios
 			.post("/public/reservations/create/", data)
@@ -184,7 +195,6 @@ const HomePage = () => {
 				setOtpSended(false);
 				setCounter((e) => ({ key: !e.key, date: Date.now() }));
 				setSelectedDoctor(null);
-				setSelectedDay(null);
 				setSelectedDate(null);
 				setDayTimesData([]);
 				setSelectedTime(null);
@@ -222,10 +232,10 @@ const HomePage = () => {
 		getDoctorsList();
 	}, []);
 	useEffect(() => {
-		if (selectedDay !== null) {
+		if (selectedDate !== null) {
 			getDoctorDays();
 		}
-	}, [selectedDay]);
+	}, [selectedDate]);
 	return (
 		<div className={style.wrapper}>
 			<Paper elevation={6} className={style.paperMain}>
@@ -251,44 +261,19 @@ const HomePage = () => {
 								<>
 									<Divider sx={{ width: "100%" }} />
 									<Stack className={style.calender} alignItems="center" gap={1}>
-										<Typography variant="h6" color="GrayText" fontWeight="bold">
-											{calendarData?.month} {calendarData?.year}
-										</Typography>
-										<Stack
-											className={style.calender__week}
-											p={1}
-											direction="row"
-											justifyContent="center"
-										>
-											{calendarData?.week.map((day, index) => (
-												<Stack
-													p={1}
-													key={index}
-													className={`${style.calender__week__dayItem} ${
-														selectedDay === day?.dayOfWeek ? style.calender__week__current : ""
-													}`}
-													alignItems="center"
-													gap={1}
-													onClick={() => {
-														setSelectedDay(day?.dayOfWeek);
-														setSelectedDate(day?.dayOfMonth);
+										<ThemeProvider theme={rtlTheme}>
+											<LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
+												<DateCalendar
+													value={selectedDate}
+													onChange={(newValue) => setSelectedDate(newValue)}
+													shouldDisableDate={(date) => {
+														const currentDate = new Date(date);
+														currentDate.setHours(0, 0, 0, 0);
+														return currentDate.getTime() < today.getTime();
 													}}
-												>
-													<Typography
-														variant="caption"
-														color={selectedDay === day?.dayOfWeek ? "white" : "GrayText"}
-														fontWeight="bold"
-														className={style.calender__week__dayItem__dayOfWeek}
-													>
-														{day?.dayOfWeek}
-													</Typography>
-													<Typography variant="h6" fontWeight="bold">
-														{day?.dayOfMonth}
-													</Typography>
-													<Box className={style.calender__week__dot} />
-												</Stack>
-											))}
-										</Stack>
+												/>
+											</LocalizationProvider>
+										</ThemeProvider>
 										<Typography
 											sx={{ gap: "0.2rem", display: "flex", alignItems: "center" }}
 											variant="subtitle2"
@@ -345,25 +330,9 @@ const HomePage = () => {
 										className={style.form__input}
 										required
 										size="xlarge"
-										label="نام"
-										error={errors.first_name?.message}
-										{...register("first_name")}
-									/>
-									<Input
-										className={style.form__input}
-										required
-										size="xlarge"
-										label="نام خانوادگی"
-										error={errors.last_name?.message}
-										{...register("last_name")}
-									/>
-									<Input
-										className={style.form__input}
-										required
-										size="xlarge"
-										label="کد ملی"
-										error={errors.national_code?.message}
-										{...register("national_code")}
+										label="نام و نام خانوادگی"
+										error={errors.full_name?.message}
+										{...register("full_name")}
 									/>
 									<Input
 										className={style.form__input}
@@ -401,14 +370,8 @@ const HomePage = () => {
 										اطلاعات رزرو
 									</Typography>
 									<div className={`${style.preview__itemWithBorder}`}>
-										<Typography variant="subtitle2">نام:</Typography>
-										<Typography variant="subtitle2">
-											{watch("first_name")} {watch("last_name")}
-										</Typography>
-									</div>
-									<div className={`${style.preview__itemWithBorder}`}>
-										<Typography variant="subtitle2">کد ملی:</Typography>
-										<Typography variant="subtitle2">{watch("national_code")}</Typography>
+										<Typography variant="subtitle2">نام و نام خانوادگی:</Typography>
+										<Typography variant="subtitle2">{watch("full_name")}</Typography>
 									</div>
 									<div className={`${style.preview__itemWithBorder}`}>
 										<Typography variant="subtitle2">شماره موبایل:</Typography>
@@ -416,9 +379,12 @@ const HomePage = () => {
 									</div>
 									<div className={`${style.preview__itemWithBorder}`}>
 										<Typography variant="subtitle2">تاریخ رزرو:</Typography>
-										<Typography variant="subtitle2">{`${selectedDay} ${selectedDate} ${moment(
-											today,
-										).format("jMMMM")} ماه ${moment(today).format("jYYYY")}`}</Typography>
+										<Typography variant="subtitle2">{`${moment(
+											selectedDate,
+											"jYYYY/jMM/jDD",
+										).format("dddd")} (${new Date(selectedDate).toLocaleDateString(
+											"fa-ir",
+										)})`}</Typography>
 									</div>
 									<div className={`${style.preview__itemWithBorder}`}>
 										<Typography variant="subtitle2">ساعت رزرو:</Typography>

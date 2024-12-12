@@ -33,15 +33,15 @@
 			border: 2px solid var(--bl-secondary);
 		}
 
-		&:disabled {
-			color: var(--bl-on-surface-38);
-			border-color: var(--bl-on-surface-12);
-			background-color: #fff;
+		// &:disabled {
+		// 	color: var(--bl-on-surface-38);
+		// 	border-color: var(--bl-on-surface-12);
+		// 	background-color: #fff;
 
-			&::placeholder {
-				color: var(--bl-on-surface-38);
-			}
-		}
+		// 	&::placeholder {
+		// 		color: var(--bl-on-surface-38);
+		// 	}
+		// }
 	}
 
 	&__help {
@@ -209,19 +209,18 @@
 		}
 
 		& .MuiPickersArrowSwitcher-root {
-
-      & .MuiIconButton-root {
-        margin: 0;
+			& .MuiIconButton-root {
+				margin: 0;
 
 				&:first-child,
 				&:last-child {
 					transform: rotate(180deg);
 				}
-      }
+			}
 
-      & .MuiPickersArrowSwitcher-spacer {
-        width: 1rem;
-      }
+			& .MuiPickersArrowSwitcher-spacer {
+				width: 1rem;
+			}
 		}
 
 		& .MuiPickersDay-root,
@@ -250,11 +249,11 @@
 					background-color: var(--bl-primary-12);
 				}
 
-				&:disabled {
-					color: var(--bl-on-surface);
-					background-color: #fff;
-					border-color: var(--bl-on-surface);
-				}
+				// &:disabled {
+				// 	color: var(--bl-on-surface);
+				// 	background-color: #fff;
+				// 	border-color: var(--bl-on-surface);
+				// }
 			}
 
 			&.Mui-selected,
@@ -273,10 +272,10 @@
 			margin: 0;
 			padding: 0.625rem 0.25rem;
 
-			&:disabled {
-				color: var(--bl-on-surface);
-				background-color: #fff;
-			}
+			// &:disabled {
+			// 	color: var(--bl-on-surface);
+			// 	background-color: #fff;
+			// }
 		}
 
 		& .MuiPickersYear-yearButton {
@@ -285,7 +284,7 @@
 			font-size: 1rem;
 			font-weight: 600;
 			line-height: 1.5rem; /* 150% */
-      color: var(--bl-on-surface-variant2);
+			color: var(--bl-on-surface-variant2);
 
 			&:disabled {
 				color: var(--bl-on-surface-variant2);
@@ -293,10 +292,10 @@
 			}
 		}
 
-    & .MuiYearCalendar-root {
+		& .MuiYearCalendar-root {
 			border-bottom: 1px solid var(--bl-outline-variant);
-      width: 100%;
-    }
+			width: 100%;
+		}
 
 		& .MuiDialogActions-root {
 			padding: 0.5rem 0.75rem 0.75rem;

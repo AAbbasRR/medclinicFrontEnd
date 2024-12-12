@@ -136,6 +136,10 @@
 	}
 }
 
+:global(.MuiMultiSectionDigitalClock-root) {
+	flex-direction: row-reverse !important;
+}
+
 :global(.MuiPickersPopper-root),
 :global(.MuiDialog-root) {
 	border-radius: 28px;
@@ -209,19 +213,18 @@
 		}
 
 		& .MuiPickersArrowSwitcher-root {
-
-      & .MuiIconButton-root {
-        margin: 0;
+			& .MuiIconButton-root {
+				margin: 0;
 
 				&:first-child,
 				&:last-child {
 					transform: rotate(180deg);
 				}
-      }
+			}
 
-      & .MuiPickersArrowSwitcher-spacer {
-        width: 1rem;
-      }
+			& .MuiPickersArrowSwitcher-spacer {
+				width: 1rem;
+			}
 		}
 
 		& .MuiPickersDay-root,
@@ -285,7 +288,7 @@
 			font-size: 1rem;
 			font-weight: 600;
 			line-height: 1.5rem; /* 150% */
-      color: var(--bl-on-surface-variant2);
+			color: var(--bl-on-surface-variant2);
 
 			&:disabled {
 				color: var(--bl-on-surface-variant2);
@@ -293,10 +296,10 @@
 			}
 		}
 
-    & .MuiYearCalendar-root {
+		& .MuiYearCalendar-root {
 			border-bottom: 1px solid var(--bl-outline-variant);
-      width: 100%;
-    }
+			width: 100%;
+		}
 
 		& .MuiDialogActions-root {
 			padding: 0.5rem 0.75rem 0.75rem;

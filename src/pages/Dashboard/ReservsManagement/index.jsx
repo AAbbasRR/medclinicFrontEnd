@@ -1,9 +1,11 @@
 import { IconButton, Tooltip } from "@mui/material";
 import _debounce from "lodash/debounce";
+import moment from "moment-jalaali";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import IconExcel from "src/assets/icons/icon-excel-file.svg";
 import IconSearch from "src/assets/icons/icon-input-search.svg";
+import IconAdd from "src/assets/icons/icon-plus-circle-success.svg";
 import { Button } from "src/components/Button";
 import { Empty } from "src/components/Empty";
 import { Input } from "src/components/Input";
@@ -11,6 +13,7 @@ import { Spin } from "src/components/Spin";
 import { Table } from "src/components/Table";
 import { handleError } from "src/utils/api-error-handling";
 import axios from "src/utils/axios";
+import AddReserveModal from "./AddReserveModal";
 import FilterModal from "./FilterModal";
 import style from "./style.module.scss";
 
@@ -35,6 +38,8 @@ const ReservsManagement = () => {
 		created_at_after: "",
 		created_at_before: "",
 	});
+	const [createReserveModal, setCreateReserveModal] = useState(false);
+	const [reload, setReload] = useState(false);
 
 	const debouncedSearch = useMemo(
 		() =>
@@ -127,21 +132,14 @@ const ReservsManagement = () => {
 	}, [searchValue]);
 	useEffect(() => {
 		getData();
-	}, [paginationModel, filterData]);
+	}, [paginationModel, filterData, reload]);
 
 	const columns = [
 		{
-			headerName: "نام",
-			field: "first_name",
+			headerName: "نام و نام خانوادگی",
+			field: "full_name",
 			flex: 1,
-			minWidth: 150,
-			sortable: false,
-		},
-		{
-			headerName: "نام خانوادگی",
-			field: "last_name",
-			flex: 1,
-			minWidth: 150,
+			minWidth: 200,
 			sortable: false,
 		},
 		{
@@ -160,19 +158,15 @@ const ReservsManagement = () => {
 			sortable: false,
 		},
 		{
-			headerName: "کد ملی",
-			field: "national_code",
-			flex: 1,
-			minWidth: 150,
-			sortable: false,
-		},
-		{
 			headerName: "تاریخ",
 			field: "date",
 			flex: 1,
 			minWidth: 150,
 			sortable: false,
-			renderCell: ({ row }) => `${row?.day_of_week} ${row?.date} ${row?.month} ماه ${row?.year}`,
+			renderCell: ({ row }) =>
+				`${moment(row?.date, "jYYYY/jMM/jDD").format("dddd")} (${new Date(
+					row?.date,
+				).toLocaleDateString("fa-ir")})`,
 		},
 		{
 			headerName: "زمان",
@@ -191,6 +185,14 @@ const ReservsManagement = () => {
 						<div className={style.header}>
 							<div className={style.header__title}>
 								<div className={style.title}>رزرو ها</div>
+								<Tooltip title="ثبت رزرو جدید">
+									<IconButton
+										className={style.IconButton}
+										onClick={() => setCreateReserveModal(true)}
+									>
+										<img src={IconAdd} alt="add-icon" />
+									</IconButton>
+								</Tooltip>
 							</div>
 							<div className={style.row}>
 								<Button variant="contained" onClick={() => setFilterModal(true)}>
@@ -237,6 +239,12 @@ const ReservsManagement = () => {
 				errors={errors}
 				onSubmit={handleSubmit(getSubmitFilter)}
 				reset={resetFilter}
+			/>
+			<AddReserveModal
+				open={createReserveModal}
+				setOpen={setCreateReserveModal}
+				reload={reload}
+				setReload={setReload}
 			/>
 		</>
 	);

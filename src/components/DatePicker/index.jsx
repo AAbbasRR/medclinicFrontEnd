@@ -59,6 +59,7 @@ function AdapterJalali(props, ref) {
 									onBlur={(date) => {
 										field.onBlur(date);
 									}}
+									{...rest}
 								/>
 							);
 						}}
