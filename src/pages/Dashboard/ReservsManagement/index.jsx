@@ -146,7 +146,7 @@ const ReservsManagement = () => {
 			headerName: "دکتر",
 			field: "doctor",
 			flex: 1,
-			minWidth: 100,
+			minWidth: 300,
 			sortable: false,
 			renderCell: ({ row }) => `${row?.doctor?.field}: ${row?.doctor?.name}`,
 		},
@@ -154,14 +154,14 @@ const ReservsManagement = () => {
 			headerName: "شماره تماس",
 			field: "mobile_number",
 			flex: 1,
-			minWidth: 120,
+			minWidth: 180,
 			sortable: false,
 		},
 		{
 			headerName: "تاریخ",
 			field: "date",
 			flex: 1,
-			minWidth: 150,
+			minWidth: 250,
 			sortable: false,
 			renderCell: ({ row }) =>
 				`${moment(row?.date, "jYYYY/jMM/jDD").format("dddd")} (${new Date(

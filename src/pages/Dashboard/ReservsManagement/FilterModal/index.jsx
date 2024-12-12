@@ -28,19 +28,19 @@ const FilterModal = ({ open, setOpen, control, errors, onSubmit, reset }) => {
 				<DatePicker
 					size="xlarge"
 					label="از تاریخ"
-					error={errors.created_at_after?.message}
+					error={errors.date_after?.message}
 					helperText="روز/ماه/سال"
 					className={style.form__input}
-					name="created_at_after"
+					name="date_after"
 					control={control}
 				/>
 				<DatePicker
 					size="xlarge"
 					label="تا تاریخ"
-					error={errors.created_at_before?.message}
+					error={errors.date_before?.message}
 					helperText="روز/ماه/سال"
 					className={style.form__input}
-					name="created_at_before"
+					name="date_before"
 					control={control}
 				/>
 			</form>
