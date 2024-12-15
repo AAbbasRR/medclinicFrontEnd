@@ -164,7 +164,7 @@ const ReservsManagement = () => {
 			minWidth: 250,
 			sortable: false,
 			renderCell: ({ row }) =>
-				`${moment(row?.date, "jYYYY/jMM/jDD").format("dddd")} (${new Date(
+				`${moment(row?.date, "YYYY/MM/DD").format("dddd")} (${new Date(
 					row?.date,
 				).toLocaleDateString("fa-ir")})`,
 		},

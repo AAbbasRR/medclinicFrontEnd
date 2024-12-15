@@ -13,6 +13,7 @@ import style from "./style.module.scss";
 const schema = () =>
 	object({
 		activate_gateway: boolean(),
+		use_redis_cache: string(),
 		gateway_token: string(),
 		reserve_price: string(),
 		terms_content: string(),
@@ -29,7 +30,7 @@ const SettingsManagement = () => {
 	} = useForm({
 		mode: "onChange",
 		resolver: yupResolver(schema()),
-		defaultValues: { activate_gateway: false },
+		defaultValues: { activate_gateway: false, use_redis_cache: "0" },
 	});
 
 	const [loading, setLoading] = useState(false);
@@ -55,9 +56,12 @@ const SettingsManagement = () => {
 			.finally(() => setLoading(false));
 	};
 	const onSubmit = (data) => {
+		console.log(data);
 		for (const item in data) {
 			setLoading(true);
 			const result = formData.find((node) => node.type === item);
+			console.log(result);
+
 			if (!result) {
 				if (data[item] !== "") {
 					axios
@@ -126,6 +130,14 @@ const SettingsManagement = () => {
 								error={errors.reserve_price?.message}
 								{...register("reserve_price")}
 							/>
+							<div className={`${style.form__input} ${style.form__inputSwitch}`}>
+								وضعیت فعال بودن استفاده از ردیس
+								<Switch
+									name="use_redis_cache"
+									checked={Boolean(Number(watch("use_redis_cache")))}
+									onChange={(e) => setValue("use_redis_cache", e.target.checked ? "1" : "0")}
+								/>
+							</div>
 							<Input
 								className={style.form__inputFull}
 								size="xlarge"
