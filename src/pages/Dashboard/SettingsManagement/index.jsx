@@ -56,12 +56,9 @@ const SettingsManagement = () => {
 			.finally(() => setLoading(false));
 	};
 	const onSubmit = (data) => {
-		console.log(data);
 		for (const item in data) {
 			setLoading(true);
 			const result = formData.find((node) => node.type === item);
-			console.log(result);
-
 			if (!result) {
 				if (data[item] !== "") {
 					axios
